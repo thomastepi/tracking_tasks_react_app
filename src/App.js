@@ -1,23 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import AddTask from "./components/AddTask";
+import Tasks from "./components/Tasks";
+import { useState, useEffect } from "react";
+import supabase from "./assets/supabase";
 
 function App() {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    async function getTask() {
+
+      let query = supabase.from("TaskTracker").select("*");
+
+      const { data: alltasks, error } = await query.limit(1000);
+
+      // handle Error
+      if (error) {
+        console.log(error);
+        alert("There was a problem getting data");
+      } else {
+        setTasks(() => alltasks);
+      }
+    }
+    getTask();
+  }, []);
+
+  // async function onDelete() {
+  //   const { error } = await supabase
+  // .from('TaskTracker')
+  // .delete()
+  // .eq('id', 'someValue')
+  // }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <AddTask />
+      <Tasks tasks={tasks} />
     </div>
   );
 }
