@@ -14,6 +14,7 @@ const AddTask = () => {
       return;
     }
 
+    // add task to database table on clicking the submit button
     const { data, error } = await supabase
       .from("TaskTracker")
       .insert([{ task, day, reminder }])

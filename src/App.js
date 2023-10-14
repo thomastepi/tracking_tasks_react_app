@@ -1,6 +1,9 @@
 import AddTask from "./components/AddTask";
 import Tasks from "./components/Tasks";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
+import About from "./components/About";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import supabase from "./assets/supabase";
 
@@ -10,7 +13,6 @@ function App() {
 
   useEffect(() => {
     async function getTask() {
-
       // get tasks from database table and update state
       let query = supabase.from("TaskTracker").select("*");
       const { data: alltasks, error } = await query.limit(1000);
@@ -41,18 +43,32 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <Header
-        onAdd={() => setShowAddTask(!showAddTask)}
-        showAdd={showAddTask}
-      />
-      {showAddTask && <AddTask />}
-      {tasks.length > 0 ? (
-        <Tasks tasks={tasks} onDelete={onDelete} />
-      ) : (
-        "No Tasks To Show"
-      )}
-    </div>
+    <Router>
+      <div className="container">
+        <Header
+          onAdd={() => setShowAddTask(!showAddTask)}
+          showAdd={showAddTask}
+        />
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                {showAddTask && <AddTask />}
+                {tasks.length > 0 ? (
+                  <Tasks tasks={tasks} onDelete={onDelete} />
+                ) : (
+                  "No Tasks To Show"
+                )}
+              </>
+            }
+          />
+          <Route path="/about" element={<About />}/>
+        </Routes>
+        <Footer/>
+      </div>
+    </Router>
   );
 }
 
