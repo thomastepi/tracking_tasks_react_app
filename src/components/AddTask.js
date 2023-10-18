@@ -19,7 +19,7 @@ const AddTask = () => {
       .from("TaskTracker")
       .insert([{ task, day, reminder }])
       .select();
-    
+
     setTask("");
     setDay("");
     setReminder(false);
